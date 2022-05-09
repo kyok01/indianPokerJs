@@ -34,16 +34,18 @@
       </div>
       <div id="battle">
         <div class="battle__field">
-          <!-- <div class="battle__stockPile">
-            <img src="./img/stockPile.png" alt="">
-          </div> -->
-          <div class="battle__enemyZone">
-            <span>相手</span>
-            <span id="enemyCard"><img src="/img/trump/card_back.png" /></span>
-            <span id="enemyBoy"><img src="./img/boy/boy1.jpg" /></span>
+          <div class="battle__firstLine">
+            <div class="battle__stockPile">
+              <img src="./img/stockPile.png" alt="" />
+            </div>
+            <div class="battle__enemyZone">
+              <span id="enemyCard"><img src="/img/trump/card_back.png" / class="enemyCard__opacity"></span>
+              <span id="enemyBoy"><img src="./img/boy/boy1.jpg" /></span>
+              <span>相手</span>
+            </div>
           </div>
           <div class="battle__yourZone">
-            自分
+            あなた
             <span id="yourCard"><img src="/img/trump/card_back.png" /></span>
           </div>
           <div class="battle__buttons">
@@ -174,11 +176,43 @@
         enemyMarkNum = cardConverter(enemyCard); // 山札の一番上のカードを相手に配る
         yourCardImg = cardImgConverter(yourMarkNum);
         enemyCardImg = cardImgConverter(enemyMarkNum);
-        $("#yourCard").html(`<img src="/img/trump/card_back.png">`); // 自分のカードは非表示
-        $("#enemyCard").html(`<img src="/img/trump/${enemyCardImg}">`); // 相手のカードは表示
         $("#btn01").addClass("inactive");
         stockPile.splice(0, 2); // 山札から場に出た2枚を消す
         console.log(stockPile); // debug
+        // animation
+        $(".battle__stockPile").append(
+          '<span class="battle__moveStockPileCard1"><img src="/img/trump/card_back.png"></span>'
+        );
+        $(".battle__stockPile").append(
+          '<span class="battle__moveStockPileCard2"><img src="/img/trump/card_back.png"></span>'
+        );
+        // enemy側へ行くカードの動作の指定
+        $(".battle__moveStockPileCard1").animate(
+          { marginLeft: "40%" },
+          500,
+          "swing",
+          function () {
+            $.when($(".battle__moveStockPileCard1").fadeOut(500)).done(
+              function () {
+                  $("#enemyCard").html(
+                    `<img src="/img/trump/${enemyCardImg}">`
+                  ); // 相手のカードは表示
+              }
+            );
+          }
+        );
+        $(".battle__moveStockPileCard2").animate(
+          { marginLeft: "-45%",marginTop: "30%" },
+          500,
+          "swing",
+          function () {
+            $.when($(".battle__moveStockPileCard2").fadeOut(500)).done(
+              function () {
+                $("#yourCard").html(`<img src="/img/trump/card_back.png">`); // 自分のカードは裏表示
+              }
+            );
+          }
+        );
         changeBoyFace(); // 相手の表情を変える
       });
 

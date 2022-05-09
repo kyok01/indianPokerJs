@@ -46,12 +46,12 @@ footer {
 }
 
 .inactive {
-    color: gray;
-  }
-  
-  .discarded {
-    color: #fc9d9d;
-  }
+  color: gray;
+}
+
+.discarded {
+  color: #fc9d9d;
+}
 
 /* 主にgamestart.html用のCSS */
 
@@ -136,12 +136,12 @@ h2 {
 
 /* 主にgameplay.html用のCSS */
 
-#status{
-    width: 100%;
+#status {
+  width: 100%;
 }
 
-.status__box{
-    border: 2px solid #aad6ec;
+.status__box {
+  border: 2px solid #aad6ec;
   width: 40%;
   margin: 12px auto;
   padding: 12px;
@@ -149,61 +149,93 @@ h2 {
   font-size: 0.8em;
 }
 
-.status__turnBox{
-text-align: center;
+.status__turnBox {
+  text-align: center;
 }
 
-.status__winNumBox{
-text-align: center;
+.status__winNumBox {
+  text-align: center;
 }
 
-.status__changeNumBox{
-    text-align: center;
-    }
-    
-#battle{
-    width: 100%;
+.status__changeNumBox {
+  text-align: center;
+}
+
+#battle {
+  width: 100%;
 }
 
 .battle__field {
-    border: 2px solid #aad6ec;
-    width: 88%;
-    margin: 12px auto;
-    padding: 12px;
-    background-color: #eef9ff;
-  }
-
-  .battle__enemyZone{
-      width: 32%;
-    margin-left: auto;
-  }
-
-  #enemyBoy {
-    width: 50%;
+  border: 2px solid #aad6ec;
+  width: 88%;
+  margin: 12px auto;
+  padding: 12px;
+  background-color: #eef9ff;
 }
 
-  .battle__buttons {
-      margin: 0 auto;
-      width: 96%;
-      display: flex;
-      justify-content: space-around;
+.battle__firstLine {
+  display: flex;
+  justify-content: space-between;
+}
+
+.battle__stockPile {
+  /* display:inline-block; */
+  width: 32%;
+  padding-left: 28%;
+  position: relative;
+}
+
+.battle__moveStockPileCard1 {
+  position: absolute;
+  top: 50%;
+  left: 70%;
+  transform: translate(-50%,-50%);
+  z-index: 10;
+}
+
+.battle__moveStockPileCard2 {
+    position: absolute;
+    top: 50%;
+    left: 70%;
+    transform: translate(-50%,-50%);
+    z-index: 5;
   }
-  .battle__buttons button{
-    width: 20%;
-    font-size: 0.6em;
-    padding: 12px;
-    border: none;
-    background-color: #fc9d9d;
-    color: white;
-    border-radius: 12px;
-  }
+
+.battle__enemyZone {
+  width: 36%;
+  /* margin-left: auto; */
+  /* text-align: right; */
+  /* display:inline-block; */
+}
+
+.enemyCard__opacity{
+    opacity: 0;
+}
+
+#enemyBoy {
+  width: 50%;
+}
+
+.battle__buttons {
+  margin: 0 auto;
+  width: 96%;
+  display: flex;
+  justify-content: space-around;
+}
+.battle__buttons button {
+  width: 20%;
+  font-size: 0.6em;
+  padding: 12px;
+  border: none;
+  background-color: #fc9d9d;
+  color: white;
+  border-radius: 12px;
+}
 
 #discardPile {
-    border: 2px solid #aad6ec;
-    width: 88%;
-    margin: 12px auto;
-    padding: 12px;
-    background-color: #eef9ff;
+  border: 2px solid #aad6ec;
+  width: 88%;
+  margin: 12px auto;
+  padding: 12px;
+  background-color: #eef9ff;
 }
-
-
