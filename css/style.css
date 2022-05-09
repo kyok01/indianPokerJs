@@ -1,0 +1,209 @@
+/* 主に全ページ共通のCSS */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 28px;
+  color: #5b5b5b;
+  background-color: #eef9ff;
+}
+
+header {
+  background-color: #aad6ec;
+  text-align: center;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 64px;
+  color: white;
+}
+
+main {
+  width: 80%;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 36px;
+  color: #fc9d9d;
+  margin: 4px;
+}
+
+span.marker {
+  background: linear-gradient(transparent 50%, #eef9ff 50%);
+}
+
+button:hover {
+  opacity: 0.5;
+}
+
+footer {
+  height: 120px;
+}
+
+.inactive {
+    color: gray;
+  }
+  
+  .discarded {
+    color: #fc9d9d;
+  }
+
+/* 主にgamestart.html用のCSS */
+
+#hero {
+  margin: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#hero img {
+  width: 96%;
+  height: 600px;
+  object-fit: cover;
+}
+
+#rule {
+  width: 100%;
+}
+
+.rule__box {
+  border: 2px solid #aad6ec;
+  width: 88%;
+  margin: 12px auto;
+  padding: 12px;
+  background-color: #eef9ff;
+}
+
+.rule__box ul {
+  margin: 4px;
+}
+
+.rule__box ul li {
+  margin: 4px;
+  margin-top: 16px;
+}
+
+#explanation {
+  width: 100%;
+}
+
+.explanation__box {
+  border: 2px solid #aad6ec;
+  width: 88%;
+  margin: 12px auto;
+  padding: 12px;
+  background-color: #eef9ff;
+}
+
+h2 {
+  font-size: 36px;
+  color: #fc9d9d;
+  margin: 4px;
+}
+
+.explanation__box ul {
+  margin: 4px;
+}
+
+.explanation__box ul li {
+  margin: 4px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+#cta {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 24px;
+}
+
+#cta button {
+  width: 40%;
+  font-size: 1em;
+  padding: 12px;
+  border: none;
+  background-color: #fc9d9d;
+  color: white;
+  border-radius: 12px;
+}
+
+/* 主にgameplay.html用のCSS */
+
+#status{
+    width: 100%;
+}
+
+.status__box{
+    border: 2px solid #aad6ec;
+  width: 40%;
+  margin: 12px auto;
+  padding: 12px;
+  background-color: #eef9ff;
+  font-size: 0.8em;
+}
+
+.status__turnBox{
+text-align: center;
+}
+
+.status__winNumBox{
+text-align: center;
+}
+
+.status__changeNumBox{
+    text-align: center;
+    }
+    
+#battle{
+    width: 100%;
+}
+
+.battle__field {
+    border: 2px solid #aad6ec;
+    width: 88%;
+    margin: 12px auto;
+    padding: 12px;
+    background-color: #eef9ff;
+  }
+
+  .battle__enemyZone{
+      width: 32%;
+    margin-left: auto;
+  }
+
+  #enemyBoy {
+    width: 50%;
+}
+
+  .battle__buttons {
+      margin: 0 auto;
+      width: 96%;
+      display: flex;
+      justify-content: space-around;
+  }
+  .battle__buttons button{
+    width: 20%;
+    font-size: 0.6em;
+    padding: 12px;
+    border: none;
+    background-color: #fc9d9d;
+    color: white;
+    border-radius: 12px;
+  }
+
+#discardPile {
+    border: 2px solid #aad6ec;
+    width: 88%;
+    margin: 12px auto;
+    padding: 12px;
+    background-color: #eef9ff;
+}
+
+

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="robots" content="noindex" />
     <script src="js/jquery-2.1.3.min.js"></script>
-    <link rel="stylesheet" href="css/sample.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <title>Indian Poker</title>
   </head>
 
@@ -13,44 +13,83 @@
     <header>
       <h1>Indian Poker</h1>
     </header>
-    <div>
-      ルール：山札はジョーカーなしの52枚！全5ターンのうち3勝した方の勝ち！各ターン1回だけカードを変えることができます
-    </div>
-    <div>
-      ゲームの始め方：山札をシャッフルして最初のカードを配ってゲーム開始
-    </div>
     <main>
       <ul>
-        <li id="btn02">山札をシャッフルして試合開始！</li>
-        <li id="btn01">最初のカードを配る</li>
+        <li id="btn01">試合開始！山札をシャッフルして最初のカードを配る</li>
       </ul>
-      <div>
-        ターン数：
-        <span id="turnNumber">1</span>/全5
+      <div id="status">
+        <div class="status__box">
+          <div class="status__turnBox">
+            第<span id="turnNumber">1</span>ターン/全5ターン
+          </div>
+          <div>判定結果:<span id="status__judgeResult"></span></div>
+          <div class="status__winNumBox">
+            <span id="winNum">0</span>勝 <span id="loseNum">0</span>敗
+            <span id="drawNum">0</span>分
+          </div>
+          <div class="status__changeNumBox">
+            カード変更<span id="changeNum">0</span>回/最大2回
+          </div>
+        </div>
       </div>
-      <div>
-        相手のカード：
-        <span id="enemyCard"></span>
-      </div>
-      <div>
-        自分のカード：
-        <span id="yourCard"></span>
-      </div>
-      <button id="changeCard">カードを変える</button>
-      <button id="verification">判定</button>
-      <button id="nextTurn">次のターンに移る</button>
-      <button id="resetGame">もう一度最初から挑戦する</button>
-      <div>判定結果:<span id="judgeResult"></span></div>
-      <div>
-        <span id="winNum">0</span>勝 <span id="loseNum">0</span>敗
-        <span id="drawNum">0</span>分
+      <div id="battle">
+        <div class="battle__field">
+          <!-- <div class="battle__stockPile">
+            <img src="./img/stockPile.png" alt="">
+          </div> -->
+          <div class="battle__enemyZone">
+            <span>相手</span>
+            <span id="enemyCard"><img src="/img/trump/card_back.png" /></span>
+            <span id="enemyBoy"><img src="./img/boy/boy1.jpg" /></span>
+          </div>
+          <div class="battle__yourZone">
+            自分
+            <span id="yourCard"><img src="/img/trump/card_back.png" /></span>
+          </div>
+          <div class="battle__buttons">
+            <button id="changeCard">カードを変える</button>
+            <button id="verification">結果を判定</button>
+            <button id="nextTurn">次のターンに移る</button>
+            <button id="resetGame">もう一度最初から挑戦する</button>
+          </div>
+        </div>
       </div>
       <div id="discardPile">
-        捨て札（捨て札にあるものは赤く表示）:
+        <h2>捨て札（捨てられたカードは赤く表示)</h2>
         <div id="discardPile__spade">spade:</div>
         <div id="discardPile__heart">heart:</div>
         <div id="discardPile__diamond">diamond:</div>
         <div id="discardPile__club">club:</div>
+      </div>
+      <div id="rule">
+        <div class="rule__box">
+          <h2>ルール</h2>
+          <ul>
+            <li>
+              山札はジョーカーなしの52枚！KING(13)が一番強く、エース(1)が最も弱いです
+            </li>
+            <li>全5ターンのうち先に2勝した方が勝ちです！</li>
+            <li>
+              各ターン1回だけカードを変えることができます。ただし変更できるのは合計2ターンまでです
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="explanation">
+        <div class="explanation__box">
+          <h2>補足説明・お得な情報</h2>
+          <ul>
+            <li>
+              相手はあなたのカードの強さに応じて表情が変わる<span class="marker"
+                >かもしれません</span
+              >
+            </li>
+            <li>
+              下の「ゲームをプレイする」ボタンを押して遷移した先の画面の下の方に捨て札を見ることができる場所があります
+            </li>
+            <li></li>
+          </ul>
+        </div>
       </div>
     </main>
 
@@ -66,7 +105,7 @@
       let enemyCard; // 0~51の数字
       let yourMarkNum = {}; // 0~51の数字をマークと数字の連想配列に変換したもの
       let enemyMarkNum = {}; // 0~51の数字をマークと数字の連想配列に変換したもの
-      let yourCardImg; // 自分のカードの画像アドレスのslugを表す変数 
+      let yourCardImg; // 自分のカードの画像アドレスのslugを表す変数
       let enemyCardImg; // 相手のカードの画像アドレスのalugを表す変数
 
       // ターン数を保存する変数。初期値は1
@@ -120,7 +159,14 @@
         }
       }
 
-      // ボタンが押されたら、自分と相手に配る
+      // 試合開始ボタンが押されたら、カードをシャッフルして山札を作る
+      $("#btn01").one("click", function () {
+        stockPile = sort_at_random(allCards);
+        console.log(stockPile); // debug
+        $("#btn01").addClass("inactive");
+      });
+
+      // 試合開始ボタンが押されたら、自分と相手に配る
       $("#btn01").one("click", function () {
         yourCard = stockPile[0];
         enemyCard = stockPile[1];
@@ -128,25 +174,12 @@
         enemyMarkNum = cardConverter(enemyCard); // 山札の一番上のカードを相手に配る
         yourCardImg = cardImgConverter(yourMarkNum);
         enemyCardImg = cardImgConverter(enemyMarkNum);
-        $("#yourCard").html(
-          `<img src="/img/trump/card_back.png">`
-          ); // 自分のカードは非表示
-        // $("#enemyCard").text(
-        //   `${enemyMarkNum["mark"]} ${enemyMarkNum["number"]}`
-        // ); // 相手のカードは表示
-        $("#enemyCard").html(
-          `<img src="/img/trump/${enemyCardImg}">`
-          ); // 相手のカードは表示
+        $("#yourCard").html(`<img src="/img/trump/card_back.png">`); // 自分のカードは非表示
+        $("#enemyCard").html(`<img src="/img/trump/${enemyCardImg}">`); // 相手のカードは表示
         $("#btn01").addClass("inactive");
         stockPile.splice(0, 2); // 山札から場に出た2枚を消す
         console.log(stockPile); // debug
-      });
-
-      // 試合開始ボタンが押されたら、カードをシャッフルして山札を作る
-      $("#btn02").one("click", function () {
-        stockPile = sort_at_random(allCards);
-        console.log(stockPile); // debug
-        $("#btn02").addClass("inactive");
+        changeBoyFace(); // 相手の表情を変える
       });
 
       // カードを変更する
@@ -161,9 +194,12 @@
         stockPile.splice(0, 1); // 山札から1枚を消す
         // カード変更を行った回数を一つ増やす
         changeCardNum += 1;
+        $("#changeNum").html(changeCardNum);
         // 1ターンに複数回カード変更をできないようdisable化する
         $("#changeCard").addClass("inactive");
         document.getElementById("changeCard").disabled = true;
+        // 相手の表情を変える
+        changeBoyFace();
       });
 
       // 次のターンに移るボタンで、もう一度カードを配る
@@ -186,32 +222,24 @@
           yourCardImg = cardImgConverter(yourMarkNum);
           enemyCardImg = cardImgConverter(enemyMarkNum);
           stockPile.splice(0, 2); // 山札から場に出た2枚を消す
-          // $("#yourCard").text(""); // 自分のカードは非表示
-          $("#yourCard").html(
-          `<img src="/img/trump/card_back.png">`
-          ); // 自分のカードは非表示
-          // $("#enemyCard").text(
-          //   `${enemyMarkNum["mark"]} ${enemyMarkNum["number"]}`
-          // ); // 相手のカードは表示
-          $("#enemyCard").html(
-          `<img src="/img/trump/${enemyCardImg}">`
-          ); // 相手のカードは表示
+          $("#yourCard").html(`<img src="/img/trump/card_back.png">`); // 自分のカードは非表示
+          $("#enemyCard").html(`<img src="/img/trump/${enemyCardImg}">`); // 相手のカードは表示
           // ターン数制御関係
-          $("#turnNumber").html(turn);
+          $("#status__turnNumber").html(turn);
           // 2回までならカードを変更できるようにする
           if (changeCardNum < 2) {
             $("#changeCard").removeClass("inactive");
-        $("#changeCard").prop("disabled", "false");
+            $("#changeCard").prop("disabled", false);
           }
+          // 相手の表情を変える
+          changeBoyFace();
         }
       });
 
       // ボタンが押されたら結果を判定する
       $("#verification").on("click", function () {
         // まず自分のカードを表示する
-        $("#yourCard").html(
-          `<img src="/img/trump/${yourCardImg}">`
-          );
+        $("#yourCard").html(`<img src="/img/trump/${yourCardImg}">`);
         // $("#yourCard").text(`${yourMarkNum["mark"]} ${yourMarkNum["number"]}`);
         if (yourMarkNum["number"] > enemyMarkNum["number"]) {
           $("#judgeResult").text("勝ち");
@@ -230,7 +258,7 @@
         }
         // カードを変更できないようにする
         $("#changeCard").addClass("inactive");
-        $("#changeCard").prop("disabled", "true");
+        $("#changeCard").prop("disabled", true);
         // 捨て札制御関係
         discardPile.push(yourCard, enemyCard);
         console.log(discardPile);
@@ -240,21 +268,21 @@
           // 勝利した場合の処理
           $("#nextTurn").html("試合結果をみる");
           $("#turnNumber").html("試合終了");
-          $("#changeCard").prop("disabled", "true");
-          $("#verification").prop("disabled", "true");
+          $("#changeCard").prop("disabled", true);
+          $("#verification").prop("disabled", true);
         }
         if (loseCount == 2) {
           // game最終ターンの場合の処理
           $("#nextTurn").html("試合結果をみる");
           $("#turnNumber").html("試合終了");
-          $("#changeCard").prop("disabled", "true");
-          $("#verification").prop("disabled", "true");
+          $("#changeCard").prop("disabled", true);
+          $("#verification").prop("disabled", true);
         }
         if (turn == 5) {
           // game最終ターンの場合の処理
           $("#nextTurn").html("試合結果をみる");
-          $("#changeCard").prop("disabled", "true");
-          $("#verification").prop("disabled", "true");
+          $("#changeCard").prop("disabled", true);
+          $("#verification").prop("disabled", true);
         }
       });
 
@@ -309,6 +337,31 @@
         }
         if (arr["number"] >= 10) {
           return `card_${arr["mark"]}_${arr["number"]}.png`;
+        }
+      };
+
+      // 2秒後に数字に応じて表情を変える関数
+      let changeBoyFace = () => {
+        let randomNum = Math.floor(Math.random() * 5); // 0~4の乱数を生成
+        //   60%の確率で数字に応じた表情に変える
+        if (randomNum >= 2) {
+          if (yourMarkNum["number"] >= 12) {
+            setTimeout(function () {
+              $("#enemyBoy").html('<img src="./img/boy/boy5.jpg">');
+            }, 2000);
+          } else if (yourMarkNum["number"] >= 10) {
+            setTimeout(function () {
+              $("#enemyBoy").html('<img src="./img/boy/boy4.jpg">');
+            }, 2000);
+          } else if (yourMarkNum["number"] >= 8) {
+            setTimeout(function () {
+              $("#enemyBoy").html('<img src="./img/boy/boy3.jpg">');
+            }, 2000);
+          } else if (yourMarkNum["number"] >= 6) {
+            setTimeout(function () {
+              $("#enemyBoy").html('<img src="./img/boy/boy2.jpg">');
+            }, 2000);
+          }
         }
       };
 
