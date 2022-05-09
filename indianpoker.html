@@ -40,7 +40,6 @@
       <button id="verification">判定</button>
       <button id="nextTurn">次のターンに移る</button>
       <button id="resetGame">もう一度最初から挑戦する</button>
-      <!-- <button id="resetScore">スコアをリセット</button> -->
       <div>判定結果:<span id="judgeResult"></span></div>
       <div>
         <span id="winNum">0</span>勝 <span id="loseNum">0</span>敗
@@ -67,6 +66,8 @@
       let enemyCard; // 0~51の数字
       let yourMarkNum = {}; // 0~51の数字をマークと数字の連想配列に変換したもの
       let enemyMarkNum = {}; // 0~51の数字をマークと数字の連想配列に変換したもの
+      let yourCardImg; // 自分のカードの画像アドレスのslugを表す変数 
+      let enemyCardImg; // 相手のカードの画像アドレスのalugを表す変数
 
       // ターン数を保存する変数。初期値は1
       let turn = 1;
@@ -125,10 +126,17 @@
         enemyCard = stockPile[1];
         yourMarkNum = cardConverter(yourCard); // 山札の一番上のカードを自分に配る
         enemyMarkNum = cardConverter(enemyCard); // 山札の一番上のカードを相手に配る
-        $("#yourCard").text(""); // 自分のカードは非表示
-        $("#enemyCard").text(
-          `${enemyMarkNum["mark"]} ${enemyMarkNum["number"]}`
-        ); // 相手のカードは表示
+        yourCardImg = cardImgConverter(yourMarkNum);
+        enemyCardImg = cardImgConverter(enemyMarkNum);
+        $("#yourCard").html(
+          `<img src="/img/trump/card_back.png">`
+          ); // 自分のカードは非表示
+        // $("#enemyCard").text(
+        //   `${enemyMarkNum["mark"]} ${enemyMarkNum["number"]}`
+        // ); // 相手のカードは表示
+        $("#enemyCard").html(
+          `<img src="/img/trump/${enemyCardImg}">`
+          ); // 相手のカードは表示
         $("#btn01").addClass("inactive");
         stockPile.splice(0, 2); // 山札から場に出た2枚を消す
         console.log(stockPile); // debug
@@ -149,6 +157,7 @@
         // 新しいカードを山札から引く
         yourCard = stockPile[0];
         yourMarkNum = cardConverter(yourCard); // yourMarkNumも忘れず更新する
+        yourCardImg = cardImgConverter(yourMarkNum); // yourCardImgも忘れず更新する
         stockPile.splice(0, 1); // 山札から1枚を消す
         // カード変更を行った回数を一つ増やす
         changeCardNum += 1;
@@ -174,24 +183,36 @@
           console.log(yourCard); // debug
           enemyCard = stockPile[1];
           enemyMarkNum = cardConverter(enemyCard);
+          yourCardImg = cardImgConverter(yourMarkNum);
+          enemyCardImg = cardImgConverter(enemyMarkNum);
           stockPile.splice(0, 2); // 山札から場に出た2枚を消す
-          $("#yourCard").text(""); // 自分のカードは非表示
-          $("#enemyCard").text(
-            `${enemyMarkNum["mark"]} ${enemyMarkNum["number"]}`
+          // $("#yourCard").text(""); // 自分のカードは非表示
+          $("#yourCard").html(
+          `<img src="/img/trump/card_back.png">`
+          ); // 自分のカードは非表示
+          // $("#enemyCard").text(
+          //   `${enemyMarkNum["mark"]} ${enemyMarkNum["number"]}`
+          // ); // 相手のカードは表示
+          $("#enemyCard").html(
+          `<img src="/img/trump/${enemyCardImg}">`
           ); // 相手のカードは表示
           // ターン数制御関係
           $("#turnNumber").html(turn);
           // 2回までならカードを変更できるようにする
           if (changeCardNum < 2) {
             $("#changeCard").removeClass("inactive");
-            document.getElementById("changeCard").disabled = false;
+        $("#changeCard").prop("disabled", "false");
           }
         }
       });
 
       // ボタンが押されたら結果を判定する
       $("#verification").on("click", function () {
-        $("#yourCard").text(`${yourMarkNum["mark"]} ${yourMarkNum["number"]}`);
+        // まず自分のカードを表示する
+        $("#yourCard").html(
+          `<img src="/img/trump/${yourCardImg}">`
+          );
+        // $("#yourCard").text(`${yourMarkNum["mark"]} ${yourMarkNum["number"]}`);
         if (yourMarkNum["number"] > enemyMarkNum["number"]) {
           $("#judgeResult").text("勝ち");
           winCount += 1;
@@ -209,7 +230,7 @@
         }
         // カードを変更できないようにする
         $("#changeCard").addClass("inactive");
-        document.getElementById("changeCard").disabled = true;
+        $("#changeCard").prop("disabled", "true");
         // 捨て札制御関係
         discardPile.push(yourCard, enemyCard);
         console.log(discardPile);
@@ -279,6 +300,16 @@
         }
         cardMarkNum = { mark: cardMark, number: cardRemResult + 1 };
         return cardMarkNum;
+      };
+
+      // 連想配列からトランプの画像アドレスのslugを作る関数
+      let cardImgConverter = (arr) => {
+        if (arr["number"] <= 9) {
+          return `card_${arr["mark"]}_0${arr["number"]}.png`;
+        }
+        if (arr["number"] >= 10) {
+          return `card_${arr["mark"]}_${arr["number"]}.png`;
+        }
       };
 
       // 捨て札に何が出ているかを表示するための処理を行う関数
