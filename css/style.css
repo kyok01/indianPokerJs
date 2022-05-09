@@ -33,8 +33,13 @@ h2 {
   margin: 4px;
 }
 
+ul {
+    list-style: disc;
+    padding-left: 28px;
+}
+
 span.marker {
-  background: linear-gradient(transparent 50%, #eef9ff 50%);
+  background: linear-gradient(transparent 70%, #AAD6EC 70%);
 }
 
 button:hover {
@@ -257,3 +262,25 @@ h2 {
   padding: 12px;
   background-color: #eef9ff;
 }
+
+#discardPile div{
+    margin: 12px auto;
+    padding: 12px 12px 0px 12px;
+    background-color: #eef9ff;
+  }
+
+/* 主に3ページ目で使用するCSS */
+
+.result__box {
+    border: 2px solid #aad6ec;
+    width: 88%;
+    margin: 12px auto;
+    padding: 12px;
+    background-color: #eef9ff;
+  }
+
+  .result__box div{
+    margin: 12px auto;
+    padding: 12px 12px 0px 12px;
+    background-color: #eef9ff;
+  }

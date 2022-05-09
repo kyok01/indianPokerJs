@@ -1,35 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="js/jquery-2.1.3.min.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <title>試合結果</title>
-</head>
-<body>
-    <div>あなたの最終的な結果は
-        <span id="finalResult"></span>
-        です！
-    </div>
-    <div id="result">
-        全ターンの結果:
-        <span id="result__winCount">0</span>勝<span id="result__loseCount">0</span>敗<span id="result__drawCount">0</span>分
-    </div>
-<script>
-    const winCount = sessionStorage["winCount"];
-    const loseCount = sessionStorage["loseCount"];
-    const drawCount = sessionStorage["drawcount"];
-    if (winCount >= 2){
+  </head>
+  <body>
+    <header>
+      <h1>Indian Poker</h1>
+    </header>
+    <main>
+      <div id="result">
+        <div class="result__box">
+          <div>
+            あなたの最終的な結果は
+            <span id="finalResult" class="marker"></span>
+            です！
+          </div>
+          <div>
+            全ターンの結果:
+            <span id="result__winCount">0</span>勝<span id="result__loseCount"
+              >0</span
+            >敗<span id="result__drawCount">0</span>分
+          </div>
+        </div>
+      </div>
+      <!-- <div id="hero">
+        <img src="./img/heroImage.jpg" alt="トランプのエース" />
+      </div> -->
+      <div id="cta">
+        <button id="cta__button">
+          もう一度ゲームをプレイする
+        </button>
+      </div>
+    </main>
+    <footer></footer>
+    <script>
+      // 試合結果表示関係の処理
+      const winCount = sessionStorage["winCount"];
+      const loseCount = sessionStorage["loseCount"];
+      const drawCount = sessionStorage["drawcount"];
+      if (winCount >= 2) {
         $("#finalResult").html("勝ち越しです！おめでとうございます");
-    }
-    if (winCount < 2){
+      }
+      if (winCount < 2) {
         $("#finalResult").html("負け越しです(´;ω;｀)残念！");
-    }
-    $("#result__winCount").html(winCount);
-    $("#result__loseCount").html(loseCount);
-    $("#result__drawCount").html(drawCount);
-</script>
+      }
+      $("#result__winCount").html(winCount);
+      $("#result__loseCount").html(loseCount);
+      $("#result__drawCount").html(drawCount);
 
-</body>
+      // CTAボタンを押した際の処理
+      $("#cta__button").on("click", function () {
+        location.href = "./gameplay.html";
+      });
+    </script>
+  </body>
 </html>
