@@ -14,15 +14,11 @@
       <h1>Indian Poker</h1>
     </header>
     <main>
-      <ul>
-        <li id="btn01">試合開始！山札をシャッフルして最初のカードを配る</li>
-      </ul>
       <div id="status">
         <div class="status__box">
           <div class="status__turnBox">
             第<span id="turnNumber">1</span>ターン/全5ターン
           </div>
-          <div>判定結果:<span id="status__judgeResult"></span></div>
           <div class="status__winNumBox">
             <span id="winNum">0</span>勝 <span id="loseNum">0</span>敗
             <span id="drawNum">0</span>分
@@ -39,7 +35,10 @@
               <img src="./img/stockPile.png" alt="" />
             </div>
             <div class="battle__enemyZone">
-              <span id="enemyCard"><img src="/img/trump/card_back.png" / class="enemyCard__opacity"></span>
+              <span id="enemyCard"
+                ><img src="/img/trump/card_back.png" /
+                class="enemyCard__opacity"></span
+              >
               <span id="enemyBoy"><img src="./img/boy/boy1.jpg" /></span>
               <span>相手</span>
             </div>
@@ -89,7 +88,6 @@
             <li>
               下の「ゲームをプレイする」ボタンを押して遷移した先の画面の下の方に捨て札を見ることができる場所があります
             </li>
-            <li></li>
           </ul>
         </div>
       </div>
@@ -97,6 +95,7 @@
 
     <footer></footer>
     <script>
+      // グローバル変数の宣言 開始
       // 勝敗数をカウントする変数
       let winCount = 0;
       let loseCount = 0;
@@ -121,55 +120,209 @@
 
       // 既に場に出たカードの捨て札を記録するための配列
       let discardPile = [];
+      // グローバル変数の宣言 終了
 
-      // ジョーカーのないトランプカード一覧の配列を作る。13で割った答えと余りがそれぞれマークと数字を示す
-      let allCards = [];
-      for (let i = 0; i < 52; i++) {
-        allCards.push(i);
-      }
-      console.log(allCards); // debug
-
-      // 捨て札の初期値を作り表示させる処理
-      for (let i = 1; i < 14; i++) {
-        if (i <= 12) {
-          $("#discardPile__spade").append(
-            `<span id="discardPile__spade${i}">${i}</span>-`
-          );
-          $("#discardPile__heart").append(
-            `<span id="discardPile__heart${i}">${i}</span>-`
-          );
-          $("#discardPile__diamond").append(
-            `<span id="discardPile__diamond${i}">${i}</span>-`
-          );
-          $("#discardPile__club").append(
-            `<span id="discardPile__club${i}">${i}</span>-`
-          );
+      // HTMLや画像等が読み込み終わり次第実行する処理
+      $(window).on("load", function () {
+        // ジョーカーのないトランプカード一覧の配列を作る。13で割った答えと余りがそれぞれマークと数字を示す
+        let allCards = [];
+        for (let i = 0; i < 52; i++) {
+          allCards.push(i);
         }
-        if (i == 13) {
-          $("#discardPile__spade").append(
-            `<span id="discardPile__spade${i}">${i}</span>`
-          );
-          $("#discardPile__heart").append(
-            `<span id="discardPile__heart${i}">${i}</span>`
-          );
-          $("#discardPile__diamond").append(
-            `<span id="discardPile__diamond${i}">${i}</span>`
-          );
-          $("#discardPile__club").append(
-            `<span id="discardPile__club${i}">${i}</span>`
-          );
+        console.log(allCards); // debug
+        // 捨て札の初期値を作り表示させる処理
+        for (let i = 1; i < 14; i++) {
+          if (i <= 12) {
+            $("#discardPile__spade").append(
+              `<span id="discardPile__spade${i}">${i}</span>-`
+            );
+            $("#discardPile__heart").append(
+              `<span id="discardPile__heart${i}">${i}</span>-`
+            );
+            $("#discardPile__diamond").append(
+              `<span id="discardPile__diamond${i}">${i}</span>-`
+            );
+            $("#discardPile__club").append(
+              `<span id="discardPile__club${i}">${i}</span>-`
+            );
+          }
+          if (i == 13) {
+            $("#discardPile__spade").append(
+              `<span id="discardPile__spade${i}">${i}</span>`
+            );
+            $("#discardPile__heart").append(
+              `<span id="discardPile__heart${i}">${i}</span>`
+            );
+            $("#discardPile__diamond").append(
+              `<span id="discardPile__diamond${i}">${i}</span>`
+            );
+            $("#discardPile__club").append(
+              `<span id="discardPile__club${i}">${i}</span>`
+            );
+          }
         }
-      }
-
-      // 試合開始ボタンが押されたら、カードをシャッフルして山札を作る
-      $("#btn01").one("click", function () {
+        // カードをシャッフルして山札を作る
         stockPile = sort_at_random(allCards);
         console.log(stockPile); // debug
         $("#btn01").addClass("inactive");
+        // カードを配る
+        giveCards();
+        // 相手の表情を変える
+        changeBoyFace();
       });
 
-      // 試合開始ボタンが押されたら、自分と相手に配る
-      $("#btn01").one("click", function () {
+      // カードを変更する
+      $("#changeCard").on("click", function () {
+        // 手持ちのカードを捨てる
+        discardPile.push(yourCard);
+        showDiscard(discardPile);
+        // 手持ちカードを捨てるアニメーション
+        $("#yourCard").fadeOut(500, function () {
+          $(".battle__stockPile").append(
+            '<span class="battle__moveStockPileCard2"><img src="/img/trump/card_back.png"></span>'
+          );
+          // 手札へ行くカードの動作の指定
+          $(".battle__moveStockPileCard2").animate(
+            { marginLeft: "-45%", marginTop: "30%" },
+            500,
+            "swing",
+            function () {
+              $.when($(".battle__moveStockPileCard2").fadeOut(500)).done(
+                function () {
+                  $("#yourCard").fadeIn(500);
+                }
+              );
+            }
+          );
+        });
+        // 新しいカードを山札から引く
+        yourCard = stockPile[0];
+        yourMarkNum = cardConverter(yourCard); // yourMarkNumも忘れず更新する
+        yourCardImg = cardImgConverter(yourMarkNum); // yourCardImgも忘れず更新する
+        stockPile.splice(0, 1); // 山札から1枚を消す
+        // カード変更を行った回数を一つ増やす
+        changeCardNum += 1;
+        $("#changeNum").html(changeCardNum);
+        // 1ターンに複数回カード変更をできないようdisable化する
+        $("#changeCard").addClass("inactive");
+        $("#changeCard").prop("disabled", true);
+        // 相手の表情を変える
+        changeBoyFace();
+      });
+
+      // ボタンが押されたら結果を判定する
+      $("#verification").on("click", function () {
+        // まず自分のカードを表示する
+        $("#yourCard").html(`<img src="/img/trump/${yourCardImg}">`);
+        // 結果を表示する場所を作る
+        $(".battle__yourZone").append('<span class="battle__judge">判定結果:<span class="battle__judgeResult"></span></span>');
+        if (yourMarkNum["number"] > enemyMarkNum["number"]) {
+          $(".battle__judgeResult").text("勝ち");
+          winCount += 1;
+          $("#winNum").html(winCount);
+        }
+        if (yourMarkNum["number"] == enemyMarkNum["number"]) {
+          $(".battle__judgeResult").text("引き分け");
+          drawCount += 1;
+          $("#drawNum").html(drawCount);
+        }
+        if (yourMarkNum["number"] < enemyMarkNum["number"]) {
+          $(".battle__judgeResult").text("負け");
+          loseCount += 1;
+          $("#loseNum").html(loseCount);
+        }
+        // カードを変更できないようにする
+        $("#changeCard").addClass("inactive");
+        $("#changeCard").prop("disabled", true);
+        // 捨て札制御関係
+        discardPile.push(yourCard, enemyCard);
+        console.log(discardPile);
+        showDiscard(discardPile);
+        // 試合結果が決まった場合の処理
+        if (winCount == 2) {
+          // 勝利した場合の処理
+          $("#nextTurn").html("試合結果をみる");
+          $("#turnNumber").html("試合終了");
+          $("#changeCard").prop("disabled", true);
+          $("#verification").prop("disabled", true);
+        }
+        if (loseCount == 2) {
+          // 敗北した場合の処理
+          $("#nextTurn").html("試合結果をみる");
+          $("#turnNumber").html("試合終了");
+          $("#changeCard").prop("disabled", true);
+          $("#verification").prop("disabled", true);
+        }
+        if (turn == 5) {
+          // game最終ターンの場合の処理
+          $("#nextTurn").html("試合結果をみる");
+          $("#changeCard").prop("disabled", true);
+          $("#verification").prop("disabled", true);
+        }
+        // 連打できないようにdisabledにする
+        $("#verification").addClass("inactive");
+        $("#verification").prop("disabled", true);
+      });
+
+      // 次のターンに移るボタンで、もう一度カードを配る
+      $("#nextTurn").on("click", function () {
+        // 試合終了時の処理（2勝or2敗or5ターン後）
+        if (winCount == 2 || loseCount == 2 || turn == 5) {
+          sessionStorage["winCount"] = winCount;
+          sessionStorage["loseCount"] = loseCount;
+          sessionStorage["drawCount"] = drawCount;
+          location.href = "./gameresult.html";
+        } else {
+          // 以下は1~4ターン目の通常処理
+          turn += 1;
+          // 現在の自分と相手のカードを捨てるアニメーションの後に山札からカードを配る
+          $.when(
+            $("#yourCard").fadeOut(500),
+            $("#enemyCard").fadeOut(500),
+            $(".battle__judge").fadeOut(500),
+          ).done(
+            giveCards(),
+            $("#yourCard").fadeIn(500), // 表示崩れ防ぐためにfadeInで表示させる
+            $("#enemyCard").fadeIn(500) // 表示崩れ防ぐためにfadeInで表示させる
+          );
+          // ターン数制御関係
+          $("#turnNumber").html(turn);
+          // 2回までならカードを変更できるようにする
+          if (changeCardNum < 2) {
+            $("#changeCard").removeClass("inactive");
+            $("#changeCard").prop("disabled", false);
+          }
+          // 「結果を判定」ボタンを有効化する
+        $("#verification").removeClass("inactive");
+        $("#verification").prop("disabled", false);
+          // 相手の表情を変える
+          changeBoyFace();
+        }
+      });
+
+      // リロードして最初からにする
+      $("#resetGame").on("click", function () {
+        location.reload();
+      });
+
+      // カードをシャッフルする関数
+      let sort_at_random = (arrayData) => {
+        let arr = arrayData.concat(); // concat()で配列を完全に複製する
+        let arrLength = arr.length;
+        let randomArr = [];
+        for (let i = 0; i < arrLength; i++) {
+          // 0～countArrの個数 の範囲から、数値をランダムに抽出
+          let randomTarget = Math.floor(Math.random() * arr.length);
+          // randomArrに数値を格納
+          randomArr[i] = arr[randomTarget];
+          // 同じ数値を再度使わないように、今回使った数値をArrから削除しておく
+          arr.splice(randomTarget, 1);
+        }
+        return randomArr;
+      };
+
+      // 山札からカードを配る関数
+      let giveCards = () => {
         yourCard = stockPile[0];
         enemyCard = stockPile[1];
         yourMarkNum = cardConverter(yourCard); // 山札の一番上のカードを自分に配る
@@ -194,15 +347,13 @@
           function () {
             $.when($(".battle__moveStockPileCard1").fadeOut(500)).done(
               function () {
-                  $("#enemyCard").html(
-                    `<img src="/img/trump/${enemyCardImg}">`
-                  ); // 相手のカードは表示
+                $("#enemyCard").html(`<img src="/img/trump/${enemyCardImg}">`); // 相手のカードは表示
               }
             );
           }
         );
         $(".battle__moveStockPileCard2").animate(
-          { marginLeft: "-45%",marginTop: "30%" },
+          { marginLeft: "-45%", marginTop: "30%" },
           500,
           "swing",
           function () {
@@ -213,132 +364,6 @@
             );
           }
         );
-        changeBoyFace(); // 相手の表情を変える
-      });
-
-      // カードを変更する
-      $("#changeCard").on("click", function () {
-        // 手持ちのカードを捨てる
-        discardPile.push(yourCard);
-        showDiscard(discardPile);
-        // 新しいカードを山札から引く
-        yourCard = stockPile[0];
-        yourMarkNum = cardConverter(yourCard); // yourMarkNumも忘れず更新する
-        yourCardImg = cardImgConverter(yourMarkNum); // yourCardImgも忘れず更新する
-        stockPile.splice(0, 1); // 山札から1枚を消す
-        // カード変更を行った回数を一つ増やす
-        changeCardNum += 1;
-        $("#changeNum").html(changeCardNum);
-        // 1ターンに複数回カード変更をできないようdisable化する
-        $("#changeCard").addClass("inactive");
-        document.getElementById("changeCard").disabled = true;
-        // 相手の表情を変える
-        changeBoyFace();
-      });
-
-      // 次のターンに移るボタンで、もう一度カードを配る
-      $("#nextTurn").on("click", function () {
-        // 試合終了時の処理（2勝or2敗or5ターン後）
-        if (winCount == 2 || loseCount == 2 || turn == 5) {
-          sessionStorage["winCount"] = winCount;
-          sessionStorage["loseCount"] = loseCount;
-          sessionStorage["drawCount"] = drawCount;
-          location.href = "./gameresult.html";
-        } else {
-          // 以下は1~4ターン目の通常処理
-          turn += 1;
-          // カード配布関係
-          yourCard = stockPile[0];
-          yourMarkNum = cardConverter(yourCard);
-          console.log(yourCard); // debug
-          enemyCard = stockPile[1];
-          enemyMarkNum = cardConverter(enemyCard);
-          yourCardImg = cardImgConverter(yourMarkNum);
-          enemyCardImg = cardImgConverter(enemyMarkNum);
-          stockPile.splice(0, 2); // 山札から場に出た2枚を消す
-          $("#yourCard").html(`<img src="/img/trump/card_back.png">`); // 自分のカードは非表示
-          $("#enemyCard").html(`<img src="/img/trump/${enemyCardImg}">`); // 相手のカードは表示
-          // ターン数制御関係
-          $("#status__turnNumber").html(turn);
-          // 2回までならカードを変更できるようにする
-          if (changeCardNum < 2) {
-            $("#changeCard").removeClass("inactive");
-            $("#changeCard").prop("disabled", false);
-          }
-          // 相手の表情を変える
-          changeBoyFace();
-        }
-      });
-
-      // ボタンが押されたら結果を判定する
-      $("#verification").on("click", function () {
-        // まず自分のカードを表示する
-        $("#yourCard").html(`<img src="/img/trump/${yourCardImg}">`);
-        // $("#yourCard").text(`${yourMarkNum["mark"]} ${yourMarkNum["number"]}`);
-        if (yourMarkNum["number"] > enemyMarkNum["number"]) {
-          $("#judgeResult").text("勝ち");
-          winCount += 1;
-          $("#winNum").html(winCount);
-        }
-        if (yourMarkNum["number"] == enemyMarkNum["number"]) {
-          $("#judgeResult").text("引き分け");
-          drawCount += 1;
-          $("#drawNum").html(drawCount);
-        }
-        if (yourMarkNum["number"] < enemyMarkNum["number"]) {
-          $("#judgeResult").text("負け");
-          loseCount += 1;
-          $("#loseNum").html(loseCount);
-        }
-        // カードを変更できないようにする
-        $("#changeCard").addClass("inactive");
-        $("#changeCard").prop("disabled", true);
-        // 捨て札制御関係
-        discardPile.push(yourCard, enemyCard);
-        console.log(discardPile);
-        showDiscard(discardPile);
-        // 試合結果が決まった場合の処理
-        if (winCount == 2) {
-          // 勝利した場合の処理
-          $("#nextTurn").html("試合結果をみる");
-          $("#turnNumber").html("試合終了");
-          $("#changeCard").prop("disabled", true);
-          $("#verification").prop("disabled", true);
-        }
-        if (loseCount == 2) {
-          // game最終ターンの場合の処理
-          $("#nextTurn").html("試合結果をみる");
-          $("#turnNumber").html("試合終了");
-          $("#changeCard").prop("disabled", true);
-          $("#verification").prop("disabled", true);
-        }
-        if (turn == 5) {
-          // game最終ターンの場合の処理
-          $("#nextTurn").html("試合結果をみる");
-          $("#changeCard").prop("disabled", true);
-          $("#verification").prop("disabled", true);
-        }
-      });
-
-      // リロードして最初からにする
-      $("#resetGame").on("click", function () {
-        location.reload();
-      });
-
-      // カードをシャッフルする関数
-      let sort_at_random = (arrayData) => {
-        let arr = arrayData.concat(); // concat()で配列を完全に複製する
-        let arrLength = arr.length;
-        let randomArr = [];
-        for (let i = 0; i < arrLength; i++) {
-          // 0～countArrの個数 の範囲から、数値をランダムに抽出
-          let randomTarget = Math.floor(Math.random() * arr.length);
-          // randomArrに数値を格納
-          randomArr[i] = arr[randomTarget];
-          // 同じ数値を再度使わないように、今回使った数値をArrから削除しておく
-          arr.splice(randomTarget, 1);
-        }
-        return randomArr;
       };
 
       // 0~51の数字をトランプの絵柄と数字の連想配列に変換する関数
@@ -395,6 +420,8 @@
             setTimeout(function () {
               $("#enemyBoy").html('<img src="./img/boy/boy2.jpg">');
             }, 2000);
+          } else {
+            $("#enemyBoy").html('<img src="./img/boy/boy1.jpg">');
           }
         }
       };

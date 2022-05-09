@@ -1,5 +1,5 @@
 /* 主に全ページ共通のCSS */
-
+/* 配色は万人受けする配色2つ目(https://saruwakakun.com/design/gallery/palette) */
 body {
   margin: 0;
   padding: 0;
@@ -46,7 +46,8 @@ footer {
 }
 
 .inactive {
-  color: gray;
+  /* background-color: #5B5B5B; */
+  opacity: 0.5;
 }
 
 .discarded {
@@ -216,12 +217,29 @@ h2 {
   width: 50%;
 }
 
+.battle__yourZone {
+    height: 212px;
+    display: flex;
+    position: relative;
+}
+
+.battle__judge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #AAD6EC;
+    padding: 12px;
+    border-radius: 12px;
+}
+
 .battle__buttons {
   margin: 0 auto;
   width: 96%;
   display: flex;
   justify-content: space-around;
 }
+
 .battle__buttons button {
   width: 20%;
   font-size: 0.6em;
