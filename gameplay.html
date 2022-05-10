@@ -37,7 +37,7 @@
             </div>
             <div class="battle__enemyZone">
               <span id="enemyCard"
-                ><img src="/img/trump/card_back.png" /
+                ><img src="./img/trump/card_back.png"
                 class="enemyCard__opacity"></span
               >
               <span id="enemyBoy"><img src="./img/boy/boy1.jpg" /></span>
@@ -180,7 +180,7 @@
         // 手持ちカードを捨てるアニメーション
         $("#yourCard").fadeOut(500, function () {
           $(".battle__stockPile").append(
-            '<span class="battle__moveStockPileCard2"><img src="/img/trump/card_back.png"></span>'
+            '<span class="battle__moveStockPileCard2"><img src="./img/trump/card_back.png"></span>'
           );
           // 手札へ行くカードの動作の指定
           $(".battle__moveStockPileCard2").animate(
@@ -214,7 +214,7 @@
       // ボタンが押されたら結果を判定する
       $("#verification").on("click", function () {
         // まず自分のカードを表示する
-        $("#yourCard").html(`<img src="/img/trump/${yourCardImg}">`);
+        $("#yourCard").html(`<img src="./img/trump/${yourCardImg}">`);
         // 結果を表示する場所を作る
         $(".battle__yourZone").append('<span class="battle__judge">判定結果:<span class="battle__judgeResult"></span></span>');
         if (yourMarkNum["number"] > enemyMarkNum["number"]) {
@@ -335,10 +335,10 @@
         console.log(stockPile); // debug
         // animation
         $(".battle__stockPile").append(
-          '<span class="battle__moveStockPileCard1"><img src="/img/trump/card_back.png"></span>'
+          '<span class="battle__moveStockPileCard1"><img src="./img/trump/card_back.png"></span>'
         );
         $(".battle__stockPile").append(
-          '<span class="battle__moveStockPileCard2"><img src="/img/trump/card_back.png"></span>'
+          '<span class="battle__moveStockPileCard2"><img src="./img/trump/card_back.png"></span>'
         );
         // enemy側へ行くカードの動作の指定
         $(".battle__moveStockPileCard1").animate(
@@ -348,7 +348,7 @@
           function () {
             $.when($(".battle__moveStockPileCard1").fadeOut(500)).done(
               function () {
-                $("#enemyCard").html(`<img src="/img/trump/${enemyCardImg}">`); // 相手のカードは表示
+                $("#enemyCard").html(`<img src="./img/trump/${enemyCardImg}">`); // 相手のカードは表示
               }
             );
           }
@@ -360,7 +360,7 @@
           function () {
             $.when($(".battle__moveStockPileCard2").fadeOut(500)).done(
               function () {
-                $("#yourCard").html(`<img src="/img/trump/card_back.png">`); // 自分のカードは裏表示
+                $("#yourCard").html(`<img src="./img/trump/card_back.png">`); // 自分のカードは裏表示
               }
             );
           }
